@@ -1,0 +1,21 @@
+{"intents":
+    [
+      {
+        "tag":"writemessage",
+        "input":["write a message", "write message", "print a message","print a hello world","write a hello world"],
+        "responses":[
+          "print('Hello World')"
+
+
+          ]
+        },
+        {
+          "tag":"getrepositorie",
+          "input":["List all names of GitHub repositories for an org.","list all names of GitHub repositories for an org","list all names of github repositories for an org"],
+          "responses":["url = 'https://api.github.com/orgs/' + org + '/repos'\nrequest = urllib.request.Request(url)\nresponse = urllib.request.urlopen(request)\ndata = json.loads(response.read().decode())\nreturn [repo['name'] for repo in data"]
+
+  
+        }    
+
+    ]
+  }
