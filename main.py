@@ -34,11 +34,11 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 tokenizer = Tokenizer(num_words=2000)
 tokenizer.fit_on_texts(data['inputs'])
 train = tokenizer.texts_to_sequences(data['inputs'])
-#apply padding
+
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 x_train = pad_sequences(train)
 
-#encoding the outputs
+
 from sklearn.preprocessing import LabelEncoder
 le = LabelEncoder()
 y_train = le.fit_transform(data['tags'])
@@ -70,21 +70,21 @@ while True:
   texts_p = []
   prediction_input = input('""" ')
 
-  #removing punctuation and converting to lowercase
+  
   prediction_input = [letters.lower() for letters in prediction_input if letters not in string.punctuation]
   prediction_input = ''.join(prediction_input)
   texts_p.append(prediction_input)
 
-  #tokenizing and padding
+ 
   prediction_input = tokenizer.texts_to_sequences(texts_p)
   prediction_input = np.array(prediction_input).reshape(-1)
   prediction_input = pad_sequences([prediction_input],input_shape)
 
-  #getting output from model
+ 
   output = model.predict(prediction_input)
   output = output.argmax()
 
-  #finding the right tag and predicting
+  
   response_tag = le.inverse_transform([output])[0]
   print(random.choice(responses[response_tag]))
   if response_tag == "goodbye":
