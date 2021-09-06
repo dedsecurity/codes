@@ -1,4 +1,4 @@
-<h1 align="center"> Dedsecurity Framework</h1>
+<h1 align="center"> Ded Security Codes</h1>
 
 ```bash
 Website:  https://www.dedsecurity.com
