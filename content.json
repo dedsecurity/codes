@@ -15,7 +15,17 @@
           "responses":["url = 'https://api.github.com/orgs/' + org + '/repos'\nrequest = urllib.request.Request(url)\nresponse = urllib.request.urlopen(request)\ndata = json.loads(response.read().decode())\nreturn [repo['name'] for repo in data"]
 
   
-        }    
+        },
+        {
+          "tag":"webserver",
+          "input":["create a web server", "create a webserver"],
+          "responses":[""]
+        },
+        {
+          "tag":"hello",
+          "input":["write a message with hello", "write hello", "print a hello"],
+          "responses":["print('hello')","print('Hello')"]
+        }
 
     ]
   }
