@@ -45,6 +45,8 @@ python main.py
 
 ```
 
+---
+
 ## Contributing
 Feel free to submitting pull requests to us.
 ## License
