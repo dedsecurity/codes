@@ -109,3 +109,30 @@ while True:
     httpd = HTTPServer(('localhost', 8000), Serv)
     httpd.serve_forever()
     """)
+  elif response_tag == "fetchtweets":
+    print("""
+    import tweepy, os 
+
+    def fetch_tweets_from_user(user_name):
+        # authentification
+        auth = tweepy.OAuthHandler(os.environ['TWITTER_KEY'], os.environ['TWITTER_SECRET'])
+        auth.set_access_token(os.environ['TWITTER_TOKEN'], os.environ['TWITTER_TOKEN_SECRET'])
+        api = tweepy.API(auth)
+
+        # fetch tweets
+        tweets = api.user_timeline(screen_name=user, count=200, include_rts=False)
+        return tweets
+    """)
+  elif response_tag == "workwebsite":
+    print("""
+    import urllib
+    import urllib.request
+
+    try:
+        site = urllib.request.urlopen("http://www.dedsecurity.com")
+    except urllib.error.URLError:
+        print("Error")
+    else:
+        print("Ok")
+        print(site.read())
+    """)

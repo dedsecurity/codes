@@ -18,13 +18,24 @@
         },
         {
           "tag":"webserver",
-          "input":["create a web server", "create a webserver"],
+          "input":["create a web server", "create a webserver", "webserver", "web server"],
           "responses":[""]
         },
         {
           "tag":"hello",
           "input":["write a message with hello", "write hello", "print a hello"],
           "responses":["print('hello')","print('Hello')"]
+        },
+        {
+          "tag":"fetchtweets",
+          "input":["fetch tweets", "fetch tweets from twitter"],
+          "responses":[]
+
+        },
+        {
+          "tag":"workwebsite",
+          "input":["a software that enters a website returns if it is working", "A software that enters a website returns if it is working."],
+          "responses":[]
         }
 
     ]
