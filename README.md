@@ -6,6 +6,10 @@ Author:   Simon Kinjo
 Maintenance:  Simon Kinjo
 ```
 
+>Ded Security Codes is an artificial intelligence tool 
+>developed by Ded Security to assist users through code auto-completion.
+---
+
 ## Installation
 
 Make sure you have installed the dependencies:
