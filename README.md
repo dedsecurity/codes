@@ -35,6 +35,16 @@ pip install -r requirements.txt
 
 ---
 
+## How to use it ?
+```bash
+python main.py
+```
+
+## Screen
+```bash
+
+```
+
 ## Contributing
 Feel free to submitting pull requests to us.
 ## License
