@@ -27,6 +27,8 @@ pip install -r requirements.txt
 
  [source]: https://github.com/dedsecurity/codes
 
+---
+
 ## Contributing
 Feel free to submitting pull requests to us.
 ## License
