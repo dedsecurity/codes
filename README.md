@@ -1,3 +1,5 @@
+<h1 align="center"><img src="./public/logosemfundo.png"></h1>
+
 <h1 align="center"> Ded Security Codes</h1>
 
 ```bash
