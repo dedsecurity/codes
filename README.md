@@ -16,7 +16,7 @@ Maintenance:  Simon Kinjo
 
 Make sure you have installed the dependencies:
 
-  * `python` 3
+  * `python` 3.7.4
   * `git`
 
 Clone the [source] with `git`:
