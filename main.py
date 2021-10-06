@@ -1,3 +1,6 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
 import tensorflow as tf
 import numpy as np
 import pandas as pd
@@ -10,12 +13,12 @@ from tensorflow.keras.models import Model
 import matplotlib.pyplot as plt
 
 with open('./content.json') as content:
-  data1 = json.load(content)
+  dataco = json.load(content)
 
 tags = []
 inputs = []
 responses={}
-for intent in data1['intents']:
+for intent in dataco['intents']:
   responses[intent['tag']]=intent['responses']
   for lines in intent['input']:
     inputs.append(lines)
