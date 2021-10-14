@@ -5,12 +5,17 @@ import tensorflow as tf
 import numpy as np
 import pandas as pd
 import json
-import random
 import nltk
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.layers import Input, Embedding, LSTM , Dense,GlobalMaxPooling1D,Flatten
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+from transformers import BertModel, BertTokenizer
 from tensorflow.keras.models import Model
+from sklearn.preprocessing import LabelEncoder
 import matplotlib.pyplot as plt
+import string
+import torch
+import random
 
 with open('./content.json') as content:
   dataco = json.load(content)
@@ -29,20 +34,15 @@ data = pd.DataFrame({"inputs":inputs,
 
 data = data.sample(frac=1)
 
-import string
 data['inputs'] = data['inputs'].apply(lambda wrd:[ltrs.lower() for ltrs in wrd if ltrs not in string.punctuation])
 data['inputs'] = data['inputs'].apply(lambda wrd: ''.join(wrd))
 
-from tensorflow.keras.preprocessing.text import Tokenizer
 tokenizer = Tokenizer(num_words=2000)
 tokenizer.fit_on_texts(data['inputs'])
 train = tokenizer.texts_to_sequences(data['inputs'])
 
-from tensorflow.keras.preprocessing.sequence import pad_sequences
 x_train = pad_sequences(train)
 
-
-from sklearn.preprocessing import LabelEncoder
 le = LabelEncoder()
 y_train = le.fit_transform(data['tags'])
 
@@ -65,19 +65,32 @@ model.compile(loss="sparse_categorical_crossentropy",optimizer='adam',metrics=['
 
 train = model.fit(x_train,y_train,epochs=200)
 
+model1 = BertModel.from_pretrained('bert-base-uncased')
+tokenizer1 = BertTokenizer.from_pretrained('bert-base-uncased')
+
 plt.plot(train.history['accuracy'],label='training set accuracy')
 plt.plot(train.history['loss'],label='training set loss')
 plt.legend()
 
 while True:
+  
+  import random
+  
   texts_p = []
   prediction_input = input('""" ')
-
   
+  tokens = tokenizer1.tokenize(prediction_input)
+  tokens = ['[CLS]'] + tokens + ['[SEP]']
+  tokens = tokens + ['[PAD]'] + ['[PAD]']
+  attention_mask = [1 if i!= '[PAD]' else 0 for i in tokens]
+  token_ids = tokenizer1.convert_tokens_to_ids(tokens)
+  token_ids = torch.tensor(token_ids).unsqueeze(0)
+  attention_mask = torch.tensor(attention_mask).unsqueeze(0)
+  hidden_rep, cls_head = model1(token_ids, attention_mask = attention_mask)
+
   prediction_input = [letters.lower() for letters in prediction_input if letters not in string.punctuation]
   prediction_input = ''.join(prediction_input)
   texts_p.append(prediction_input)
-
  
   prediction_input = tokenizer.texts_to_sequences(texts_p)
   prediction_input = np.array(prediction_input).reshape(-1)
@@ -87,7 +100,6 @@ while True:
   output = model.predict(prediction_input)
   output = output.argmax()
 
-  
   response_tag = le.inverse_transform([output])[0]
   print(random.choice(responses[response_tag]))
   if response_tag == "webserver":
