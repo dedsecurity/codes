@@ -4,3 +4,7 @@ pandas
 nltk
 matplotlib
 scikit-learn
+torch
+torchvision
+torchaudio
+transformers
