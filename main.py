@@ -4,26 +4,66 @@
 import tensorflow as tf
 import numpy as np
 import pandas as pd
+import os
 import json
+import random
 import nltk
+import torch
+import time
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.layers import Input, Embedding, LSTM , Dense,GlobalMaxPooling1D,Flatten
-from tensorflow.keras.preprocessing.sequence import pad_sequences
-from transformers import BertModel, BertTokenizer
 from tensorflow.keras.models import Model
-from sklearn.preprocessing import LabelEncoder
+from transformers import BertModel, BertTokenizer
 import matplotlib.pyplot as plt
-import string
-import torch
-import random
+
+print(tf.__version__)
+
+def time_matmul(x):
+  start = time.time()
+  for loop in range(10):
+    tf.matmul(x, x)
+
+  result = time.time()-start
+
+  print("10 loops: {:0.2f}ms".format(1000*result))
+
+# Force execution on CPU
+print("On CPU:")
+with tf.device("CPU:0"):
+  x = tf.random.uniform([1000, 1000])
+  assert x.device.endswith("CPU:0")
+  time_matmul(x)
+
+# Force execution on GPU #0 if available
+if tf.config.list_physical_devices("GPU"):
+  print("On GPU:")
+  with tf.device("GPU:0"): # Or GPU:1 for the 2nd GPU, GPU:2 for the 3rd etc.
+    x = tf.random.uniform([1000, 1000])
+    assert x.device.endswith("GPU:0")
+    time_matmul(x)
+
+"""
+try:
+    tpu = tf.distribute.cluster_resolver.TPUClusterResolver()
+    print('Running on TPU {}'.format(tpu.cluster_spec().as_dict()['worker']))
+except ValueError:
+    tpu = None
+if tpu:
+    tf.config.experimental_connect_to_cluster(tpu)
+    tf.tpu.experimental.initialize_tpu_system(tpu)
+    strategy = tf.distribute.experimental.TPUStrategy(tpu)
+else:
+    strategy = tf.distribute.get_strategy()
+print("REPLICAS: {}".format(strategy.num_replicas_in_sync))
+"""
 
 with open('./content.json') as content:
-  dataco = json.load(content)
+  databa = json.load(content)
 
 tags = []
 inputs = []
 responses={}
-for intent in dataco['intents']:
+for intent in databa['intents']:
   responses[intent['tag']]=intent['responses']
   for lines in intent['input']:
     inputs.append(lines)
@@ -34,15 +74,20 @@ data = pd.DataFrame({"inputs":inputs,
 
 data = data.sample(frac=1)
 
+import string
 data['inputs'] = data['inputs'].apply(lambda wrd:[ltrs.lower() for ltrs in wrd if ltrs not in string.punctuation])
 data['inputs'] = data['inputs'].apply(lambda wrd: ''.join(wrd))
 
+from tensorflow.keras.preprocessing.text import Tokenizer
 tokenizer = Tokenizer(num_words=2000)
 tokenizer.fit_on_texts(data['inputs'])
 train = tokenizer.texts_to_sequences(data['inputs'])
 
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 x_train = pad_sequences(train)
 
+
+from sklearn.preprocessing import LabelEncoder
 le = LabelEncoder()
 y_train = le.fit_transform(data['tags'])
 
@@ -59,11 +104,11 @@ x = Embedding(vocabulary+1,10)(i)
 x = LSTM(10,return_sequences=True)(x)
 x = Flatten()(x)
 x = Dense(output_length,activation="softmax")(x)
-model  = Model(i,x)
+model = Model(i, x)
 
 model.compile(loss="sparse_categorical_crossentropy",optimizer='adam',metrics=['accuracy'])
 
-train = model.fit(x_train,y_train,epochs=200)
+train = model.fit(x_train,y_train,epochs=300)
 
 model1 = BertModel.from_pretrained('bert-base-uncased')
 tokenizer1 = BertTokenizer.from_pretrained('bert-base-uncased')
