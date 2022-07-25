@@ -36,6 +36,11 @@
           "tag":"workwebsite",
           "input":["a software that enters a website returns if it is working", "A software that enters a website returns if it is working."],
           "responses":[]
+        },
+        {
+          "tag":"randomanimals",
+          "input":["create a list of random animals"],
+          "responses":["import random\nanimals = ['cat', 'dog', 'fish', 'bird', 'snake', 'lizard', 'turtle', 'hamster', 'gerbil', 'rabbit', 'guinea pig', 'chinchilla', 'rat', 'mouse', 'ferret', 'hedgehog', 'hermit crab', 'tarantula', 'frog']"]
         }
 
     ]
